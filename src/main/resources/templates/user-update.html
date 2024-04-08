@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Update user</title>
+</head>
+<body>
+<form action="#" th:action="@{/admin/user-update/{id}(id=${user.id})}" th:object="${user}" method="post">
+    <label for="id">ID</label>
+    <input readonly type="number" th:field="*{id}" id="id" placeholder="ID">
+    <br/>
+    <label for="username">Login</label>
+    <input type="text" th:field="*{username}" id="username" placeholder="Login">
+    <br/>
+    <label for="firstName">First name</label>
+    <input type="text" th:field="*{firstName}" id="firstName" placeholder="First name">
+    <br/>
+    <label for="lastName">Last name</label>
+    <input type="text" th:field="*{lastName}" id="lastName" placeholder="Last name">
+    <br/>
+    <label for="password">Password</label>
+    <input type="text" th:field="*{password}" id="password" placeholder="password">
+    <br/>
+    <label>Role</label>
+    <td>
+        <th:block th:each="role : ${user.getRoles()}"
+                  th:text="${role.name + ' '}">
+        </th:block>
+    </td>
+    <br/>
+    <label>Role</label>
+
+    <div th:each="role : ${roles}">
+        <!-- Используем значение роли для id и value чекбокса -->
+        <label th:for="${'role_' + role.id}">
+            <input type="checkbox" th:id="${'role_' + role.id}" th:name="listRoles" th:value="${role.id}">
+            <!-- Отображаем имя роли -->
+            <span th:text="${role.name}"></span>
+        </label><br>
+    </div>
+    <input type="submit" value="Update">
+</form>
+<a href="/logout">Logout</a>
+</body>
+</html>
+
+
