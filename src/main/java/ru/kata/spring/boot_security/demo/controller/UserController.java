@@ -6,15 +6,19 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import ru.kata.spring.boot_security.demo.model.Role;
+import ru.kata.spring.boot_security.demo.model.UserDto;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserDetailsServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserService;
 import ru.kata.spring.boot_security.demo.model.User;
+
 import java.security.Principal;
 import java.util.*;
 
@@ -90,22 +94,27 @@ public class UserController {
     }
 
     @PostMapping("/admin/user-update/{id}")
-    public String updateUser(@PathVariable Long id, @ModelAttribute User updatedUser, @RequestParam(name = "listRoles", required = false) List<Long> listRoles) {
+    public String updateUser(@PathVariable Long id, @ModelAttribute UserDto updatedUserDto, @RequestParam(name = "listRoles", required = false) List<Long> listRoles) {
         User existingUser = userService.findById(id);
         if (existingUser != null) {
-            existingUser.setFirstName(updatedUser.getFirstName());
-            existingUser.setLastName(updatedUser.getLastName());
-            existingUser.setUsername(updatedUser.getUsername());
-            existingUser.setPassword(updatedUser.getPassword());
+            // Обновляем только те поля, которые указаны в UserDto
+            existingUser.setFirstName(updatedUserDto.getFirstName());
+            existingUser.setLastName(updatedUserDto.getLastName());
+            existingUser.setUsername(updatedUserDto.getUsername());
 
-            List<Role> roles = roleService.findRolesByIds(listRoles);
-            existingUser.setRoles(roles);
+            // Проверяем, что список идентификаторов ролей не null
+            if (listRoles != null) {
+                List<Role> roles = roleService.findRolesByIds(listRoles);
+                existingUser.setRoles(roles);
+            }
+
             userService.saveUser(existingUser);
             return "redirect:/admin";
         } else {
             return "redirect:/admin";
         }
     }
+
 
     @GetMapping("/admin/user-delete/{id}")
     public String deleteUser(@PathVariable("id") Long id) {
