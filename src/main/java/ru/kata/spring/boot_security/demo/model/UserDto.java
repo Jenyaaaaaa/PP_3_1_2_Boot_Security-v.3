@@ -9,6 +9,7 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private String username;
+    private String password;
     private Collection<Role> roles;
 
     @JsonProperty("id")
@@ -52,4 +53,5 @@ public class UserDto {
     public void setRoles(Collection<Role> roles) {
         this.roles = roles;
     }
+
 }

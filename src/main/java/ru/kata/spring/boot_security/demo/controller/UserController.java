@@ -108,7 +108,7 @@ public class UserController {
                 existingUser.setRoles(roles);
             }
 
-            userService.saveUser(existingUser);
+            userService.updateUser(existingUser);
             return "redirect:/admin";
         } else {
             return "redirect:/admin";

@@ -17,7 +17,9 @@ import java.util.Collection;
 import java.util.Objects;
 
 
+
 @Setter
+@Getter
 @Data
 @Entity
 @Table(name = "users")
@@ -31,6 +33,17 @@ public class User implements UserDetails {
     private String username;
     private String password;
 
+    public User(Long id, String firstName, String lastName, String username, String password, Collection<Role> roles) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.password = password;
+        this.roles = roles;
+    }
+    public User() {
+    }
+
     @ManyToMany(fetch = FetchType.LAZY)
     @Getter
     @LazyCollection(LazyCollectionOption.EXTRA)
@@ -41,18 +54,6 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Collection<Role> roles;
-
-    public User() {
-    }
-
-    public User(Long id, String firstName, String lastName, String username, String password, Collection<Role> roles) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.username = username;
-        this.password = password;
-        this.roles = roles;
-    }
 
     @Override
     public boolean equals(Object o) {
